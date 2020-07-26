@@ -34,6 +34,8 @@ class ConfigValue(ConfigPartBase):
                 return Str(val)
             elif type(val) is int:
                 return Int(val)
+            elif type(val) is float:
+                return Float(val)
             elif type(val) is bool:
                 return Bool(val)
         # The case this method is inherited
@@ -64,6 +66,9 @@ class Bool(ConfigValue):
 class Int(ConfigValue,int):
     def get_code(self):
         return repr(self)
+
+class Float(Int):
+    pass
 
 class Str(ConfigValue,str):
     """
