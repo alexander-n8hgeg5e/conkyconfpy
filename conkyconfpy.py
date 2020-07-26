@@ -164,11 +164,53 @@ class L(Section):
         super().__init__(empty,empty,elements,empty,empty,indent_width=indent_width)
 
 class Style(Section):
-    def __init__(self,*elements,indent_width=0):
-        #                head,sep,elements,itemsep,tail,indent_width=4
-        empty=ConfigKey("")
-        super().__init__(empty,empty,elements,empty,empty,indent_width=indent_width)
+    def __init__(self,head,tail,*elements,indent_width=0):
+        #                head, sep, elements,itemsep,tail,indent_width=4
 
+class Style(Section):
+    def __init__    (
+                    self,styleclass,vz=[],vzz={},
+                    style_value, style_value_arg_address,
+                    *elements,indent_width=0,**zz
+                    ):
+        """
+        style_value_arg_address:= if string -> kwarg , if int -> arg pos
+        """
+        self._styleclass = styleclass
+        self._vz=vz
+        self._vzz=vzz
+        self._style_value=style_value
+        sefl._style_value_arg_address=style_value_arg_address
+        head=self._gen_head_tail(style_value)
+        tail=self._gen_tail_tail
+        empty=ConfigKey("")
+        super().__init__(head,empty,elements, empty, tail,indent_width=indent_width)
+
+    def gen_head_tail(self,style_value):
+        addr=self.style_value_arg_address
+        if type(addr) is str:
+            self.vzz[addr]=style_value
+        elif type(addr) is int:
+            self.vz[addr]=style_value
+        thing=self.styleclass(*self.vz,**self.vzz)
+        return thing
+
+    def get_code(self):
+        if type(self.tail) is function:
+            global style
+            tail_backup = self.tail(style['color'])
+            self.tail=self.tail()
+            code=super().get_code()
+            self.tail=tail_backup
+        else:
+            code=super().get_code()
+        return code
+
+
+style = {
+        'color' : V(color="#ffffff"),
+        'font' :  V(font="Anonymous Pro:size=14:antialias=true:autohint=true"),
+        }
 
 
         
