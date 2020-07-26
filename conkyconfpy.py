@@ -1,13 +1,9 @@
 from abc import abstractmethod
 from os import linesep
+from re import sub
 
 def indent(txt,width):
-    lines=txt.strip(linesep).split(linesep)
-    indented_lines=[]
-    for line in lines:
-        indented_lines.append(" "*width + line + linesep)
-    indented_txt=linesep.join(indented_lines)
-    return indented_txt
+    return sub("^"," "*width,txt)
 
 class ConfigPartBase():
     """
@@ -136,6 +132,32 @@ class TextSection(Section):
         sep  = ConfigKey(linesep)
         itemsep  = ConfigKey(linesep)
         super().__init__(head,sep,[*z],itemsep,tail)
-        
+
+class V(ConfigPartBase):
+    def __init__(self,*z,**zz):
+        if len(zz) > 0:
+            k,v = [ (k,v) for k,v in zz.items()][0]
+            self.key        = k
+            if not hasattr(v,"__iter__"):
+                v=[v]
+            self.parameters = v
+        else:
+            self.key        = z[0]
+            self.parameters = z[1:]
+    def get_code(self):
+        parameters = [str(v) for v in self.parameters]
+        code="${"+self.key
+        if len(parameters)>0:
+            code+=" "+" ".join(parameters)
+        code+="}"
+        return code
+
+class L(Section):
+    def __init__(self,*elements,indent_width=0):
+        #                head,sep,elements,itemsep,tail,indent_width=4
+        empty=ConfigKey("")
+        super().__init__(empty,empty,elements,empty,empty,indent_width=indent_width)
+
+
         
 # vim: set foldlevel=0 foldmethod=indent foldnestmax=1 :
