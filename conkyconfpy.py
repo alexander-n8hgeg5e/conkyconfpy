@@ -158,6 +158,13 @@ class L(Section):
         empty=ConfigKey("")
         super().__init__(empty,empty,elements,empty,empty,indent_width=indent_width)
 
+class Style(Section):
+    def __init__(self,*elements,indent_width=0):
+        #                head,sep,elements,itemsep,tail,indent_width=4
+        empty=ConfigKey("")
+        super().__init__(empty,empty,elements,empty,empty,indent_width=indent_width)
+
+
 
         
 # vim: set foldlevel=0 foldmethod=indent foldnestmax=1 :
