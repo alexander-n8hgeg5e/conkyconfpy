@@ -2,7 +2,6 @@ from abc import abstractmethod
 from os import linesep
 
 def indent(txt,width):
-    print(repr(txt))
     lines=txt.strip(linesep).split(linesep)
     indented_lines=[]
     for line in lines:
@@ -129,5 +128,14 @@ class ConfigSection(Section):
         sep  = ConfigKey(linesep)
         itemsep  = ConfigKey("," + linesep)
         super().__init__(head,sep,[*z],itemsep,tail)
+
+class TextSection(Section):
+    def __init__(self,*z):
+        head = KeyValuePair("conky.text","=",ConfigKey("[["))
+        tail = ConfigKey("]]")
+        sep  = ConfigKey(linesep)
+        itemsep  = ConfigKey(linesep)
+        super().__init__(head,sep,[*z],itemsep,tail)
+        
         
 # vim: set foldlevel=0 foldmethod=indent foldnestmax=1 :
